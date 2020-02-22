@@ -3,7 +3,9 @@
     <img :src="logo">
     <h1 class="title"> Welcome To Hangman </h1>
     <h2 class="instructions"> To start the game please Click the button </h2>
-    <Button text="START" buttonColor="red" @click="value => redirectToGame(value)" />
+    <Button text="EASY" buttonColor="green" @click="value => redirectToGame(value)" />
+    <Button text="MEDIUM" buttonColor="orange" @click="value => redirectToGame(value)" />
+    <Button text="HARD" buttonColor="red" @click="value => redirectToGame(value)" />
   </div>
 </template>
 
@@ -22,7 +24,8 @@ export default {
   },
   methods: {
     redirectToGame(level) {
-      this.$router.push({ name: 'New Game', params: { level } });
+      const difficulty = level.toLowerCase();
+      this.$router.push({ name: 'New Game', params: { level: difficulty } });
     },
   },
 };
