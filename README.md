@@ -2,6 +2,10 @@
 
 > hangman game for browser
 
+## Config Files
+
+> To change the Maximum number of guesses please add the line that is in the .env.example file to the ${enviroment}.env.js files 
+
 ## Build Setup
 
 ``` bash
