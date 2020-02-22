@@ -1,28 +1,33 @@
 <template>
   <div>
-    <h2>
+    <h2 class="incorrect-letters-list">
       Incorrect Words:
-      <template v-for="(word, index) in incorrectWords">
-        <span :key="index">
+      <span class="incorrect-letter-items">
+        <template v-for="(word) in getIncorrectWords">
           {{ word }}
-        </span>
-      </template>
+        </template>
+      </span>
     </h2>
     <h1>
       Remaining Guesses: <span> {{ remainingGuesses }} </span>
     </h1>
-    <template v-for="(letter, index) in missingLettersArray">
-      <span :key="index">
+    <Input @updateInput="value => isCorrectLetter(value)" />
+    <span>
+      <template v-for="(letter) in getMissinLettersArray">
         {{ letter }}
-      </span>
-    </template>
+      </template>
+    </span>
   </div>
 </template>
 
 <script>
 import randomWords from 'random-words';
+import Input from '@/components/Input';
 
 export default {
+  components: {
+    Input,
+  },
   data() {
     return {
       word: '',
@@ -36,6 +41,21 @@ export default {
     remainingGuesses() {
       return this.guesses;
     },
+    getInputValue() {
+      return this.inputValue;
+    },
+    getMissinLettersArray() {
+      return this.missingLettersArray;
+    },
+    getIncorrectWords() {
+      return this.incorrectWords;
+    },
+    isUserWinner() {
+      return this.word === this.missingLettersArray.join('')
+    },
+    isUserLooser() {
+      return this.guesses === 0
+    },
   },
   methods: {
     getWord(difficulty) {
@@ -43,11 +63,30 @@ export default {
         case 'easy':
           return randomWords({ exactly: 1, maxLength: 3 });
         case 'medium':
-          return randomWords({ exactly: 1, minLength: 3, maxLength: 5 });
+          return randomWords({ exactly: 1, maxLength: 5 });
         case 'hard':
           return randomWords({ exactly: 1, maxLength: 9 });
         default:
           return '';
+      }
+    },
+    populateMissingWordArray(currentWordArray) {
+      currentWordArray.forEach(() => this.missingLettersArray.push('_'));
+    },
+    getLetterAparitions(letter) {
+      return this.currentWordArray
+        .map((element, i) => (element === letter ? i : -1))
+        .filter(index => index !== -1);
+    },
+    isCorrectLetter(letter) {
+      const letterAparitions = this.getLetterAparitions(letter);
+      if (letterAparitions.length === 0) {
+        this.incorrectWords.push(letter);
+        this.guesses -= 1;
+      } else {
+        for (let index = 0; index < letterAparitions.length; index += 1) {
+          this.$set(this.missingLettersArray, letterAparitions[index], letter);
+        }
       }
     },
   },
@@ -55,11 +94,17 @@ export default {
     const level = this.$route.params.level;
     this.word = this.getWord(level);
     this.currentWordArray = this.word[0].split('');
-    this.currentWordArray.forEach(() => this.missingLettersArray.push('_'));
+    this.populateMissingWordArray(this.currentWordArray);
   },
 };
 </script>
 
 <style>
-
+.incorrect-letters-list {
+  display: flex;
+  margin-left: 20px;
+}
+.incorrect-letter-items {
+  color: red;
+}
 </style>
