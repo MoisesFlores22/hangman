@@ -28,4 +28,13 @@ npm run unit
 npm test
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Current Know Issues
+
+ - When hard difficulty is set there is a possibility to get easy words
+
+
+## TODO
+
+ - Set Continuos Integration Pipeline to check the tests whenever a pr is done
+ - Search for a new random word generator library
+
