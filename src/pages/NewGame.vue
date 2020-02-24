@@ -1,13 +1,23 @@
 <template>
   <div>
-    <h2 class="incorrect-letters-list">
-      Incorrect Words:
-      <span class="incorrect-letter-items">
-        <template v-for="(word) in getIncorrectWords">
-          {{ word }}
-        </template>
-      </span>
-    </h2>
+    <div class="information">
+      <h2 class="incorrect-letters-list">
+        Incorrect Words:
+        <span class="incorrect-letter-items">
+          <template v-for="(word) in getIncorrectWords">
+            {{ word }}
+          </template>
+        </span>
+      </h2>
+      <div class="win-lose-balance">
+        <h2>
+          Wins: {{ wins }}
+        </h2>
+        <h2>
+          Loses: {{ loses }}
+        </h2>
+      </div>
+    </div>
     <h1>
       Remaining Guesses: <span> {{ remainingGuesses }} </span>
     </h1>
@@ -22,6 +32,7 @@
 
 <script>
 import Input from '@/components/Input';
+import { mapState, mapActions } from 'vuex';
 import getRandomWord from '@/utils/getRandomWord';
 import getLetterAparitions from '@/utils/getLetterAparitions';
 import { GAME_LOST, GAME_WIN } from '@/utils/constants';
@@ -40,6 +51,10 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      wins: 'wins',
+      loses: 'loses',
+    }),
     remainingGuesses() {
       return this.guesses;
     },
@@ -60,6 +75,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      incrementWin: 'incrementWin',
+      incrementLoses: 'incrementLoses',
+    }),
     populateMissingWordArray(currentWordArray) {
       currentWordArray.forEach(() => this.missingLettersArray.push('_'));
     },
@@ -69,6 +88,7 @@ export default {
         this.incorrectWords.push(letter);
         this.guesses -= 1;
         if (this.isUserLooser) {
+          this.incrementLoses();
           this.$router.push({ name: 'End Game', params: { result: GAME_LOST } });
         }
       } else {
@@ -76,6 +96,7 @@ export default {
           this.$set(this.missingLettersArray, letterAparitions[index], letter);
         }
         if (this.isUserWinner) {
+          this.incrementWin();
           this.$router.push({ name: 'End Game', params: { result: GAME_WIN } });
         }
       }
@@ -90,7 +111,16 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.information {
+  display: flex;
+  justify-content: space-evenly;
+}
+.win-lose-balance {
+  display: flex;
+  justify-content: space-around;
+  width: 200px;
+}
 .incorrect-letters-list {
   display: flex;
   margin-left: 20px;
