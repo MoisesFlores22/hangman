@@ -12,7 +12,7 @@
       Remaining Guesses: <span> {{ remainingGuesses }} </span>
     </h1>
     <Input @updateInput="value => isCorrectLetter(value)" />
-    <span>
+    <span class="guessing-word-letter">
       <template v-for="(letter) in getMissinLettersArray">
         {{ letter }}
       </template>
@@ -21,8 +21,10 @@
 </template>
 
 <script>
-import randomWords from 'random-words';
 import Input from '@/components/Input';
+import getRandomWord from '@/utils/getRandomWord';
+import getLetterAparitions from '@/utils/getLetterAparitions';
+import { GAME_LOST, GAME_WIN } from '@/utils/constants';
 
 export default {
   components: {
@@ -34,7 +36,7 @@ export default {
       incorrectWords: [],
       currentWordArray: [],
       missingLettersArray: [],
-      guesses: process.env.VUE_APP_MAX_NUMBER_OF_GUESSES,
+      guesses: process.env.VUE_APP_MAX_NUMBER_OF_GUESSES || 7,
     };
   },
   computed: {
@@ -51,48 +53,37 @@ export default {
       return this.incorrectWords;
     },
     isUserWinner() {
-      return this.word === this.missingLettersArray.join('')
+      return this.word[0] === this.missingLettersArray.join('');
     },
     isUserLooser() {
-      return this.guesses === 0
+      return this.guesses === 0;
     },
   },
   methods: {
-    getWord(difficulty) {
-      switch (difficulty) {
-        case 'easy':
-          return randomWords({ exactly: 1, maxLength: 3 });
-        case 'medium':
-          return randomWords({ exactly: 1, maxLength: 5 });
-        case 'hard':
-          return randomWords({ exactly: 1, maxLength: 9 });
-        default:
-          return '';
-      }
-    },
     populateMissingWordArray(currentWordArray) {
       currentWordArray.forEach(() => this.missingLettersArray.push('_'));
     },
-    getLetterAparitions(letter) {
-      return this.currentWordArray
-        .map((element, i) => (element === letter ? i : -1))
-        .filter(index => index !== -1);
-    },
     isCorrectLetter(letter) {
-      const letterAparitions = this.getLetterAparitions(letter);
-      if (letterAparitions.length === 0) {
+      const letterAparitions = getLetterAparitions(this.currentWordArray, letter);
+      if (!letterAparitions.length) {
         this.incorrectWords.push(letter);
         this.guesses -= 1;
+        if (this.isUserLooser) {
+          this.$router.push({ name: 'End Game', params: { result: GAME_LOST } });
+        }
       } else {
         for (let index = 0; index < letterAparitions.length; index += 1) {
           this.$set(this.missingLettersArray, letterAparitions[index], letter);
+        }
+        if (this.isUserWinner) {
+          this.$router.push({ name: 'End Game', params: { result: GAME_WIN } });
         }
       }
     },
   },
   mounted() {
     const level = this.$route.params.level;
-    this.word = this.getWord(level);
+    this.word = getRandomWord(level);
     this.currentWordArray = this.word[0].split('');
     this.populateMissingWordArray(this.currentWordArray);
   },
@@ -106,5 +97,10 @@ export default {
 }
 .incorrect-letter-items {
   color: red;
+}
+.guessing-word-letter {
+  font-size: 50px;
+  color: mediumblue;
+  font-weight: 500;
 }
 </style>
