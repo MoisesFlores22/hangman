@@ -23,5 +23,6 @@ export default {
 .answer-input {
   display: flex;
   margin: 0 auto;
+  font-size: 30px;
 }
 </style>
