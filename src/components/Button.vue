@@ -23,9 +23,9 @@ export default {
   },
   computed: {
     buttonClass() {
-      return `button-commons ${this.buttonColor}`
+      return `button-commons ${this.buttonColor}`;
     },
-  }
+  },
 };
 </script>
 
