@@ -1,10 +1,10 @@
 # hangman
 
-> hangman game for browser
+  Hangman Game
 
 ## Config Files
 
-> To change the Maximum number of guesses please add the line that is in the .env.example file to the ${enviroment}.env.js files 
+  You can change the number of allow guesses if you add `VUE_APP_MAX_NUMBER_OF_GUESSES:` to the env files located in the config folder
 
 ## Build Setup
 
