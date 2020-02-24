@@ -79,7 +79,7 @@ export default {
       incrementWin: 'incrementWin',
       incrementLoses: 'incrementLoses',
     }),
-    populateMissingWordArray(currentWordArray) {
+    populateMissingWordArrayWithUnderscores(currentWordArray) {
       currentWordArray.forEach(() => this.missingLettersArray.push('_'));
     },
     isCorrectLetter(letter) {
@@ -106,7 +106,7 @@ export default {
     const level = this.$route.params.level;
     this.word = getRandomWord(level);
     this.currentWordArray = this.word[0].split('');
-    this.populateMissingWordArray(this.currentWordArray);
+    this.populateMissingWordArrayWithUnderscores(this.currentWordArray);
   },
 };
 </script>
