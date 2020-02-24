@@ -1,5 +1,5 @@
 <template>
-  <button @click="clickAction" :class="buttonColor">
+  <button @click="clickAction" :class="buttonClass">
     {{ text }}
   </button>
 </template>
@@ -21,43 +21,36 @@ export default {
       this.$emit('click', this.text);
     },
   },
+  computed: {
+    buttonClass() {
+      return `button-commons ${this.buttonColor}`
+    },
+  }
 };
 </script>
 
 <style scoped>
-.red {
+.button-commons {
   height: 50px;
   width: 150px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 900;
-  background-color: #ff0011;
-  color: #ffffff;
   outline: none;
   cursor: pointer;
+}
+.red {
+  background-color: #ff0011;
+  color: #ffffff;
 }
 
 .green {
-  height: 50px;
-  width: 150px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 900;
   background-color: green;
   color: #ffffff;
-  outline: none;
-  cursor: pointer;
 }
 
 .orange {
-  height: 50px;
-  width: 150px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 900;
   background-color: darkorange;
   color: black;
-  outline: none;
-  cursor: pointer;
 }
 </style>
