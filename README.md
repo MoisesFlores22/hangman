@@ -31,10 +31,12 @@ npm test
 ## Current Know Issues
 
  - When hard difficulty is set there is a possibility to get easy words
+ - Wins and loses count is reset when you refresh the page
 
 
 ## TODO
 
  - Set Continuos Integration Pipeline to check the tests whenever a pr is done
  - Search for a new random word generator library
+ - Implement a backend or file to store the wins and loses of the user of the entire life
 
