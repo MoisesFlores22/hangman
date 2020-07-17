@@ -2,7 +2,7 @@
   <div>
     <div class="information">
       <h2 class="incorrect-letters-list">
-        Incorrect Words:
+        Incorrect Letters:
         <span class="incorrect-letter-items">
           <template v-for="(word) in getIncorrectWords">
             {{ word }}
@@ -14,7 +14,7 @@
           Wins: {{ wins }}
         </h2>
         <h2>
-          Loses: {{ loses }}
+          Losses: {{ loses }}
         </h2>
       </div>
     </div>
@@ -48,6 +48,7 @@ export default {
       currentWordArray: [],
       missingLettersArray: [],
       guesses: process.env.VUE_APP_MAX_NUMBER_OF_GUESSES || 7,
+      usedLetters: {},
     };
   },
   computed: {
@@ -78,33 +79,42 @@ export default {
     ...mapActions({
       incrementWin: 'incrementWin',
       incrementLoses: 'incrementLoses',
+      setCurrentWord: 'setCurrentWord',
     }),
     populateMissingWordArrayWithUnderscores(currentWordArray) {
       currentWordArray.forEach(() => this.missingLettersArray.push('_'));
     },
+    isCurrentLetterUsed(letter) {
+      return this.usedLetters[letter];
+    },
     isCorrectLetter(letter) {
-      const letterAparitions = getLetterAparitions(this.currentWordArray, letter);
-      if (!letterAparitions.length) {
-        this.incorrectWords.push(letter);
-        this.guesses -= 1;
-        if (this.isUserLooser) {
-          this.incrementLoses();
-          this.$router.push({ name: 'End Game', params: { result: GAME_LOST } });
-        }
-      } else {
-        for (let index = 0; index < letterAparitions.length; index += 1) {
-          this.$set(this.missingLettersArray, letterAparitions[index], letter);
-        }
-        if (this.isUserWinner) {
-          this.incrementWin();
-          this.$router.push({ name: 'End Game', params: { result: GAME_WIN } });
+      if (!this.isCurrentLetterUsed(letter)) {
+        this.usedLetters[letter] = true;
+        const letterAparitions = getLetterAparitions(this.currentWordArray, letter);
+        if (!letterAparitions.length) {
+          this.incorrectWords.push(letter);
+          this.guesses -= 1;
+          if (this.isUserLooser) {
+            this.incrementLoses();
+            this.$router.push({ name: 'End Game', params: { result: GAME_LOST } });
+          }
+        } else {
+          for (let index = 0; index < letterAparitions.length; index += 1) {
+            this.$set(this.missingLettersArray, letterAparitions[index], letter);
+          }
+          if (this.isUserWinner) {
+            this.incrementWin();
+            this.$router.push({ name: 'End Game', params: { result: GAME_WIN } });
+          }
         }
       }
     },
   },
   mounted() {
+    document.getElementById('answerInput').focus();
     const level = this.$route.params.level;
     this.word = getRandomWord(level);
+    this.setCurrentWord(this.word);
     this.currentWordArray = this.word[0].split('');
     this.populateMissingWordArrayWithUnderscores(this.currentWordArray);
   },

@@ -5,6 +5,9 @@ const mutations = {
   incrementLose(state) {
     state.loses += 1;
   },
+  setWord(state, word) {
+    state.word = word;
+  },
 };
 
 export default mutations;

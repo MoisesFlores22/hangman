@@ -6,7 +6,7 @@
         Wins: {{ wins }}
       </h2>
       <h2>
-        Loses: {{ loses }}
+        Losses: {{ loses }}
       </h2>
     </div>
     <h1 class="title"> Welcome To Hangman </h1>

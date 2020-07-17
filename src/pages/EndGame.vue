@@ -3,6 +3,9 @@
     <h1 :class="resultMessageClass">
       {{ resultMessage }}
     </h1>
+    <h3 class="unguessed-word-message" v-if="isUserLoser">
+      {{ unGuessedWordMessage }}
+    </h3>
     <h3 class="instructions">
       {{ continueGameMessage }}
     </h3>
@@ -23,6 +26,7 @@ import {
   GAME_WIN,
   GAME_LOST,
 } from '@/utils/constants';
+import { mapGetters } from 'vuex';
 import Button from '@/components/Button';
 
 export default {
@@ -37,14 +41,23 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      getWord: 'getWord',
+    }),
     resultMessage() {
       if (this.result === GAME_WIN) {
         return CONGRATS_MESSAGE;
       }
       return FAILED_MESSAGE;
     },
+    isUserLoser() {
+      return this.result === GAME_LOST;
+    },
     resultMessageClass() {
       return `result-message ${this.result === GAME_WIN ? GAME_WIN : GAME_LOST}`;
+    },
+    unGuessedWordMessage() {
+      return `The word was "${this.getWord}"`;
     },
   },
   methods: {
@@ -66,6 +79,9 @@ export default {
 }
 .win {
   color: green;
+}
+.unguessed-word-message {
+  font-size: 40px;
 }
 .lost {
   color: red;
