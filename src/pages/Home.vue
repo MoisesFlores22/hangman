@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import HangmanLogo from '@/assets/hangmanlogo.png';
 import Button from '@/components/Button';
 
@@ -32,9 +32,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      wins: 'wins',
-      loses: 'loses',
+    ...mapGetters({
+      wins: 'getWins',
+      loses: 'getLoses',
     }),
   },
   methods: {

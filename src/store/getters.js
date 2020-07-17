@@ -1,9 +1,11 @@
 const getters = {
   getWins(state) {
-    return state.wins;
+    const wins = localStorage.getItem('wins') || state.wins;
+    return wins;
   },
   getLoses(state) {
-    return state.loses;
+    const loses = localStorage.getItem('loses') || state.loses;
+    return loses;
   },
   getWord(state) {
     return state.word;

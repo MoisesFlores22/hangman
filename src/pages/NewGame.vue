@@ -32,7 +32,7 @@
 
 <script>
 import Input from '@/components/Input';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import getRandomWord from '@/utils/getRandomWord';
 import getLetterAparitions from '@/utils/getLetterAparitions';
 import { GAME_LOST, GAME_WIN } from '@/utils/constants';
@@ -52,9 +52,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      wins: 'wins',
-      loses: 'loses',
+    ...mapGetters({
+      wins: 'getWins',
+      loses: 'getLoses',
     }),
     remainingGuesses() {
       return this.guesses;
