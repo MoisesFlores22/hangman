@@ -35,5 +35,5 @@ jobs:
             AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_AWS }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY_AWS }}
             AWS_REGION: ${{ secrets.AWS_REGION }}
-            SOURCE_DIR: "build"
+            SOURCE_DIR: "dist"
   
